@@ -272,6 +272,22 @@ describe("get", function () {
     });
   });
 
+  it("should return buffer if return_buffers is used", function (done) {
+    r.flushall();
+    r.quit();
+
+    r = helpers.createClient({return_buffers: true});
+
+    r.set("foo", "bar", function (err, result) {
+      r.get("foo", function (err, result) {
+        (result instanceof Buffer).should.be.true;
+        result.toString().should.equal("bar");
+
+        done();
+      });
+    });
+  });
+
   it("should return string even for buffer value if we use a string for the key", function (done) {
 
     r.set("foo", Buffer.from("bar"), function (err, result) {
